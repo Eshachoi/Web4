@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>바닐라슬라이드 최종</title>
     <style>
-        * {
+         *{
             padding: 0;
             margin: 0;
         }
@@ -20,10 +20,9 @@
         .slide {
             display: flex;
             height: 500px;
-
         }
 
-        .slide li {
+        .slide > li {
             width: 1000px;
             height: 500px;
             list-style: none;
@@ -42,11 +41,11 @@
             align-items: center;
         }
 
-        .slide_btns button {
+        .slide_btns > button {
             width: 100px;
             height: 50px;
             font-size: 30px;
-            background-color: rgb(120, 200, 231);
+            background-color: cadetblue;
             color: #fff;
             border: none;
             cursor: pointer;
@@ -60,13 +59,12 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color: #abc8da;
+            background-color: rgb(160, 226, 228);
             margin: 0 8px;
-
         }
 
         .active {
-            background-color: #1787cd;
+            background-color: rgb(93, 155, 157);
         }
     </style>
 </head>
@@ -118,16 +116,17 @@
         //insertBefore: 특정 요소 앞에 새 요소를 추가
         
         let sliderLength = slide.childElementCount; //6 들어가 있음-> (4,1,2,3,4,1)
-        slide.style.width = sliderLenghth*sliderWidth + 'px';//ul길이조절
+        slide.style.width = sliderLength * sliderWidth + 'px';//ul길이조절
         //........................................................................
         //처음 브라우저 열면 보이는 인덱스 설정
         let index = 1;
-        slide.style.transform = `trnaslateX(-${index_sliderWidth}px)`;
+        slide.style.transform = `translateX(-${index * sliderWidth}px)`;
         //........................................................................
         //움직이는 기능
         function moveSlide(time){
             slide.style.transition = time + `ms`; //1000 -> 1000ms = 1초
-            slide.style.transform = `translateX(-${index_sliderWidth}px)`;
+            slide.style.transform = `translateX(-${index * sliderWidth}px)`;
+            updateDot();
         }
 
         //........................................................................
@@ -145,15 +144,16 @@
                         //시간을 0 넣어줌
                     }
                     moveCheck = true;
+                    
                 },1000);
                 moveSlide(1000);
             }
         }
-        function prev(){
+        function next(){
             if(moveCheck){//위에서 moveShcek에 true 를 넣어놓았음
                 moveCheck = false;//if문은 조건이 ture일때만 작동하기 때문에 이전 버튼을 클릭하지 못하도록
                 // (중복으로 nextrk 계속 클릭되는 현상을 막기 위해) if 문이 실행되지 않게 false 를 대입함
-                index--;//다음 버튼을 눌렀을 떄 index가 3이라면 2로 바뀌어야 함
+                index++;//다음 버튼을 눌렀을 떄 index가 3이라면 2로 바뀌어야 함
                 setTimeout(()=>{
                     if(index === slide.childElementCount-1){//슬라이드의 개수가 늘고 줄어도 항상 마지막 인덱스를 가리킬
                         //수 있도록 최종 개수(6)에서 -1을 하여 5를 넣어 줌
@@ -162,13 +162,51 @@
                         //시간을 0 넣어줌
                     }
                     moveCheck = true;
+                    
                 },1000);
                 moveSlide(1000);
             }
         }
 
-        buttons.children[0].addEventListener("click".prev);
-        buttons.children[2].addEventListener("click".next);
+        //-----------------------------------------------------------------------
+
+        console.log(sliderLength);
+        for(let i = 0;i < sliderLength-2; i++){
+            const makeDiv = document.createElement(`div`);
+            makeDiv.classList.add("dot");
+            dotBox.appendChild(makeDiv);//dotbox 자식으로 makeDiv를 차곡차곡 넣어줘라
+
+            makeDiv.addEventListener("click",()=>{
+                index = i + 1;
+                moveSlide(1000);
+            })
+
+        }
+
+        dotBox.children[0].classList.add("active");//브라우저를 열었을 때 1번 슬라이드가 먼저 보여야 하니
+        //dot의 첫번째에 붙여 놓기 
+        function updateDot(){ //모든 dot에서 active제거
+             
+            for(let i = 0; i < slideLength-2; i++){
+                dotBox.childrne[i].classList.remove("active");
+                //index에 따라 active 붙이기
+                if(index === 0){//맨 앞(복제된 마지막 슬라이드) 보이면 마지막 dot에 표시
+                    dotBox.children[sliderLength-3].classList.add("active");
+                }
+                //마지막 복제한 슬라인드인 1번이 보이고 있다면, dot은 어디로 가야할까? 
+                else if(index === sliderLength-1){
+                    dotBox.children[0].classList.add("active");
+                }else{
+                    dotBox.children[index-1].classList.add("active");
+                }
+            }
+        }
+        buttons.children[0].addEventListener("click",prev);
+        buttons.children[2].addEventListener("click",next);
+
+        setInterval(()=>{
+            next();
+        },5000)
     </script>
 </body>
 </html>
