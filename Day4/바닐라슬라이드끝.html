@@ -128,9 +128,12 @@
             slide.style.transform = `translateX(-${index * sliderWidth}px)`;
             updateDot();
         }
-
+        
         //........................................................................
         //버튼을 눌렀을 때 설정
+        buttons.children[0].addEventListener("click",prev);
+        buttons.children[2].addEventListener("click",next);
+
         function prev(){
             if(moveCheck){//위에서 moveShcek에 true 를 넣어놓았음
                 moveCheck = false;//if문은 조건이 ture일때만 작동하기 때문에 이전 버튼을 클릭하지 못하도록
@@ -169,13 +172,12 @@
         }
 
         //-----------------------------------------------------------------------
-
-        console.log(sliderLength);
-        for(let i = 0;i < sliderLength-2; i++){
+        //닷만들기
+        //console.log(sliderLength);
+        for(let i = 0; i < sliderLength-2; i++){
             const makeDiv = document.createElement(`div`);
             makeDiv.classList.add("dot");
             dotBox.appendChild(makeDiv);//dotbox 자식으로 makeDiv를 차곡차곡 넣어줘라
-
             makeDiv.addEventListener("click",()=>{
                 index = i + 1;
                 moveSlide(1000);
@@ -187,8 +189,8 @@
         //dot의 첫번째에 붙여 놓기 
         function updateDot(){ //모든 dot에서 active제거
              
-            for(let i = 0; i < slideLength-2; i++){
-                dotBox.childrne[i].classList.remove("active");
+            for(let i = 0; i < sliderLength-2; i++){
+                dotBox.children[i].classList.remove("active");
                 //index에 따라 active 붙이기
                 if(index === 0){//맨 앞(복제된 마지막 슬라이드) 보이면 마지막 dot에 표시
                     dotBox.children[sliderLength-3].classList.add("active");
@@ -201,8 +203,7 @@
                 }
             }
         }
-        buttons.children[0].addEventListener("click",prev);
-        buttons.children[2].addEventListener("click",next);
+        
 
         setInterval(()=>{
             next();
