@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>햄버거메뉴</title>
+    <script src="https://kit.fontawesome.com/26136d9ff7.js" crossorigin="anonymous"></script>
+    <style>
+       .bar_menu {
+            width: 60px;
+            height: 100vh;
+            background-color: transparent;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            top: 0;
+            right: 0;
+            align-items: center;
+            padding-top: 20px;
+            transition: 0.4s ease;
+            overflow: hidden;
+          }
+          .bar_menu:hover {
+            width: 200px;
+            background-color: aquamarine;
+          }
+          .bar_icon {
+            font-size: 30px;
+            cursor: pointer;
+        }
+        .menu_list {
+            display: flex;
+            flex-direction: column;
+            font-size: 20px;
+            opacity: 0;
+            transition: 0.4s ease;
+        }
+        .bar_menu:hover .menu_list {
+            opacity: 1;
+        }
+
+        .close_btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 20px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .bar_menu:hover .close_btn {
+            display: block;
+        }
+
+</style>
+</head>
+<body>
+    
+    <div class="bar_menu">
+        <div class="bar_icon">
+            <i class="fa-solid fa-bars"></i>
+        </div>
+        
+        <div class="menu_list">
+            <div>About</div>
+            <br>
+            <div>History</div>
+            <br>
+            <div>Contact</div>
+        </div>
+    </div>
+    
+    <div class="close_btn">
+        <i class="fa-solid fa-xmark"></i>
+    </div>
+</body>
+</html>
