@@ -48,7 +48,7 @@
         .input_box {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             border: 1px solid #fff;
             padding: 8px 16px;
             border-radius: 16px;
@@ -89,16 +89,20 @@
         const searchBtn = document.querySelector(".search_icon");
 
         searchBtn.disabled = true;
-        //disabled : 따로 만든 변수가 아니라 HTML요소의 속성( button/input)
-        searchBtn.style.opacity = 0.3;
+        //disabled : 따로 만든 변수가 아니라 HTML요소의 속성( button/input)등에 기본적으로 존재하는 속성
+        searchBtn.style.opacity = 0.3;//시각적으로 비활성화 된 것처럼 보이게
 
         inputText.addEventListener("input",()=>{
             //input: 글자를 입력하거나 지우거나 복사하거나 붙여넣기 하거나 자동완성하거나
             //input에 들어온 이벤트를 받아오는 것
 
             if(inputText.value.trim() !== ""){
+                //input에 어떤 값이 들어와야 작동함
                 // " ": 눈에 보이지는 않지만 공백이 존재한다는 것(값은 들어있음, 공백이라는 값)
                 //tim: 입력한 문자의 공백을 제거 -> "강   남" (강남 으로 바뀌-공백제거)
+                //즉 정말 텍스트가 존재하는지 확인하는 메서드
+                //inputText.value: 사용자가 입력한 값
+                //사용자가 입력한 값이 ""와 달라서 비어있지 않다면 아래 코드를 실행하겠다!
                 searchBtn.disabled = false; //input에 어떤 값이 들어왔다면 disabled(비활성화)속성을 false로 바꾸어 꺼줌
                 searchBtn.style.opacity = 1;
             }else{
@@ -107,7 +111,8 @@
                 searchBtn.style.opacity = 0.3;
             }
         });
-
+        //언제 검색되어야 할까? 
+        //검색버튼을 클릭했을 때 사용자가 inputText에 입력한 value값이 비어있지 않다면 input을 실행!
         searchBtn.addEventListener("click",()=>{
             if(inputText.value.trim() !== ""){
                 //검색 함수 실행할 것
@@ -117,14 +122,16 @@
         window.addEventListener("keyup",(e)=>{
             if(e.key === "Enter" && document.activeElement === inputText && inputText.value.trim() !== ""){
                 //검색 함수를 실행할 것
+                input();
             }
-            //activeElement: 커서가 들어있거나 활성화된 요소
+            //e.key: Enter 이벤트가 발생한 키가 Enter이고,
+            //activeElement: 현재 사용자가 클릭했거나,커서가 깜박이는 html 활성화된 요소
         });
 
         function input(){
             const query = encodeURIComponent("텍사스로드하우스" + inputText.value.trim());
-            //encodeURIComponent:
-            window.open("https://www.google.com/maps/search" + query +"/data=!3m1!4b1"); 
+            //encodeURIComponent:주소창에 특수문자나 한글을 그대로 입력할 수 없기 때문에 웹 주소에 맞게 인코딩 해주는 메서드
+            window.open("https://www.google.com/maps/search/" + query + "/data=!3m1!4b1"); 
         }
     </script>
 </body>
