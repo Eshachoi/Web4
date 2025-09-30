@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시작텍스트 인터랙션</title>
+    <style>
+        body {
+            background-color: black;
+            color: #fff;
+            height: 5000px;
+        }
+        .text_container {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;          
+        }
+
+        .text_line {
+            font-size: 60px;
+        }
+
+        .word {
+            opacity: 0;
+            transform: translateY(100%);
+            animation: textup 0.6s forwards;
+        }
+        @keyframes textup {
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="text_container">
+        <div class="text_line word" id="line1"></div>
+        <div class="text_line word" id="line2"></div>
+        <div class="text_line word" id="line3"></div>
+        
+    </div>
+
+    <script>
+        const lineWord = ["Timeless", "Spaces,"];
+        const lineWord = ["Perfected", "by", "Trust"];
+        const lineWord = ["Perfected", "bysdfsd","Trustfdsf"];
+    </script>
+</body>
+</html>
