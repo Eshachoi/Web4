@@ -26,6 +26,7 @@
             opacity: 0;
             transform: translateY(100%);
             animation: textup 0.6s forwards;
+            margin: 0 15px;
         }
         @keyframes textup {
             100% {
@@ -37,12 +38,12 @@
         
     </style>
 </head>
-<body>
-    <div class="text_container">
+    <div class="text_container" id="text_container">
         <div class="text_line word" id="line1"></div>
         <div class="text_line word" id="line2"></div>
         <div class="text_line word" id="line3"></div>
         
+    </div>
     </div>
 
     <script>
@@ -62,6 +63,39 @@
                 line.appendChild(span);
             });
         }
+
+        function playAnimation(){
+            animateLine("line1",line1Word,0);
+            animateLine("line2",line2Word,line1Word.length);
+            animateLine("line3",line3Word,line2Word.length);
+        }
+
+        function resetAnimation(){
+            document.getElementById("line1").innerHTML = "";
+            document.getElementById("line2").innerHTML = "";
+            document.getElementById("line3").innerHTML = "";
+        }
+
+        const observer = new IntersectionObserver((entries)=>{
+            //observer : 화면에 들어온 요소가 있는지 감지한다.(나가는거 포함)
+            //entries : IntersectionObserver의 관찰로 요소가 변화가 있다면 entries에 배열로 저장한다.
+
+            entries.forEach(entry => {
+                if(entry.isIntersecting){
+                //entry.isIntersecting가 true를 반환한다면 화면에 들어온 것이다.
+                    playAnimation();
+                }else {
+                    resetAnimation();
+                }
+            });
+        },{
+            threshold:0.5
+            //요소의 절반 이상이 화면에 보여야지만 움직인 요소로 인식되어 엔트리스 배열에 들어감
+        });
+
+        const textContainer = document.getElementById("text_container");
+        observer.observe(textContainer);
+
     </script>
 </body>
 </html>
