@@ -59,6 +59,10 @@
             cursor: pointer;
             color: #fff;
         }
+
+        .menu_item.active {
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -90,28 +94,28 @@
     </div>
     
     <ul class="menu" id="menu">
-        <li class="menu_item" data-index="1">
+        <li class="menu_item" data-index="0">
             section1
         </li>
-        <li class="menu_item" data-index="2">
+        <li class="menu_item" data-index="1">
             section2
         </li>
-        <li class="menu_item" data-index="3">
+        <li class="menu_item" data-index="2">
             section3
         </li>
-        <li class="menu_item" data-index="4">
+        <li class="menu_item" data-index="3">
             section4
         </li>
-        <li class="menu_item" data-index="5">
+        <li class="menu_item" data-index="4">
             section5
         </li>
-        <li class="menu_item" data-index="6">
+        <li class="menu_item" data-index="5">
             section6
         </li>
-        <li class="menu_item" data-index="7">
+        <li class="menu_item" data-index="6">
             section7
         </li>
-        <li class="menu_item" data-index="8">
+        <li class="menu_item" data-index="7">
             section8
         </li>
     </ul>
@@ -123,8 +127,50 @@
         const totalSections = sections.length;
         let isScrolling = false; //현재 스크롤중인지 여부를 나타내는 변수
         let currentIndexSection = 0; //현재 보여지고 있는 section의 index번호
+        let isFullPageScrollActive = false;//풀페이지가 스크롤이 활성화되고 있는지
+        const breakPoint = 1024; //
+
+        function updateMenu(){
+            menuItems.forEach((menu,index)=>{
+                if(index === currentIndexSection){
+                    menu.classList.add("active");
+                }else{
+                    menu.classList.remove("active");
+                }
+            });
+        }
+        updateMenu(); //호출
+
+        const menuUl = document.getElementById("menu");
+        if(window.innerWidth > breakPoint) {
+            menuItems.forEach((menu)=>{
+                menu.addEventListener("click",(e)=>{
+                    const index = parseInt(e.target.dataset.index,10);//위의 "data-set"이 문자임 그래서 숫자로 바꿔주는 것
+                    //e.target : 클릭이벤트가 발생한 타겟
+                    currentIndexSection = index;//위에서 변환한 숫자를 인덱스에 넣어줌
+
+                    sections[currentIndexSection].scrollIntoView({
+                        behavior:"smooth",
+                        block:"start"
+                    });
+                    updateMenu();
+                });
+            })
+        }
+        window.addEventListener("resize",()=>{
+            if(window.innerWidth > breakPoint){
+                manuUl.style.display = "block";
+            }else{
+                menuUl.style.display = "none";
+            }
+        }); 
+
         
         function handleScroll(event){
+            if(window.innerWidth <= breakPoint){
+                return;
+            }
+
             if(isScrolling) return;
             isScrolling = true;
 
@@ -145,7 +191,34 @@
             serTimeout(()=>{
                 isScrolling = false;
             },1000);
+            updateMenu(); //호출
         }
+        function initFullPageScroll(){
+            sections.forEach((section,index)=>{
+                const rect = section.getBoundingClientRect();//섹션의 값
+                //rect.top / rect.left / rect.width 이런식으로 접근하게 됨
+                if(rect.top >= 0 && rect.top < window.innerHeight){
+                    currentIndexSection = index;//currentIndexSection을 가져다가 index로 바꿔줘
+                }
+            });
+            isScrolling = false;//스크롤을 풀어줌
+            const breakPoint = 1024;
+            const menuUl = document.getElementById("menu");
+            if(window.innerWidth > breakPoint && !isFullPageScrollActive){
+            //1024보다 크고, 풀페이지가 true이니 풀페이지 아닌 상태
+                isFullPageScrollActive = true;
+                document.body.style.overflow = "hidden";
+                window.addEventListener("wheel", handleScroll);
+
+            } else if(window.innerWidth <= breakPoint && isFullPageScrollActive){
+                isFullPageScrollActive = false;
+                document.body.style.overflow = "auto";
+                window.removeEventListener("wheel", handleScroll);
+            }
+        }
+        
+
+        window.addEventListener("resize", initFullPageScroll);
     </script>
     
 </body>
